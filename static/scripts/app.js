@@ -69,7 +69,7 @@ if (navigator.getUserMedia) {
       mediaStreamSource.disconnect();
       console.log(mediaRecorder.state);
       record.style.background = "";
-      record.style.color = ""; 
+      record.style.color = "";
       stop.disabled = true;
       record.disabled = false;
     }
@@ -86,7 +86,7 @@ if (navigator.getUserMedia) {
       var clipLabel = document.createElement('p');
       var audio = document.createElement('audio');
       var deleteButton = document.createElement('button');
-     
+
       clipContainer.classList.add('clip');
       clipLabel.classList.add('clip-label');
       audio.setAttribute('controls', '');
@@ -125,8 +125,8 @@ if (navigator.getUserMedia) {
   navigator.getUserMedia(constraints, onSuccess, onError);
 } else {
   console.log('getUserMedia not supported on your browser!');
-  document.querySelector('.info-display').innerText = 
-	'Your device does not support the HTML5 API needed to record audio (this is a known problem on iOS)';  
+  document.querySelector('.info-display').innerText =
+	'Your device does not support the HTML5 API needed to record audio (this is a known problem on iOS)';
 }
 
 function visualize(stream) {
@@ -136,7 +136,7 @@ function visualize(stream) {
   var dataArray = new Uint8Array(bufferLength);
 
   mediaStreamSource.connect(analyser);
-  
+
   WIDTH = canvas.width
   HEIGHT = canvas.height;
 
@@ -160,7 +160,7 @@ function visualize(stream) {
     var x = 0;
 
     for(var i = 0; i < bufferLength; i++) {
- 
+
       var v = dataArray[i] / 128.0;
       var y = v * HEIGHT/2;
 
@@ -179,39 +179,46 @@ function visualize(stream) {
 }
 
 var wantedWords = [
-  'Zero',
-  'One',
-  'Two',
-  'Three',
-  'Four',
-  'Five',
-  'Six',
-  'Seven',
-  'Eight',
-  'Nine',
-  'On',
-  'Off',
-  'Stop',
-  'Go',
-  'Up',
-  'Down',
-  'Left',
-  'Right',
-  'Yes',
-  'No',
+  // 'Zero',
+  // 'One',
+  // 'Two',
+  // 'Three',
+  // 'Four',
+  // 'Five',
+  // 'Six',
+  // 'Seven',
+  // 'Eight',
+  // 'Nine',
+  // 'On',
+  // 'Off',
+  // 'Stop',
+  // 'Go',
+  // 'Up',
+  // 'Down',
+  // 'Left',
+  // 'Right',
+  // 'Yes',
+  // 'No',
+  'Chimarrao',
+  'Vermelho',
+  'Azul',
+  'Verde',
+  'Amarelo',
+  'Esquerda',
+  'Direita',
 ];
 
 var fillerWords = [
-  'Dog',
-  'Cat',
-  'Bird',
-  'Tree',
-  'Marvin',
-  'Sheila',
-  'House',
-  'Bed',
-  'Wow',
-  'Happy',
+  // 'Dog',
+  // 'Cat',
+  // 'Bird',
+  // 'Tree',
+  // 'Marvin',
+  // 'Sheila',
+  // 'House',
+  // 'Bed',
+  // 'Wow',
+  // 'Happy',
 ];
 
 function getRecordedWords() {
@@ -331,7 +338,7 @@ function endRecording() {
 }
 
 function promptToSave() {
-  if (confirm('Are you ready to upload your words?\nIf not, press cancel now,' + 
+  if (confirm('Are you ready to upload your words?\nIf not, press cancel now,' +
 	      ' and then press Upload once you are ready.')) {
     saveRecordings();
   }
@@ -349,7 +356,7 @@ function saveRecordings() {
 }
 
 function uploadNextClip() {
-  document.querySelector('.progress-display').innerText = 'Uploading clip ' + 
+  document.querySelector('.progress-display').innerText = 'Uploading clip ' +
 	clipIndex + '/' + unrollWordCounts(getAllWantedWords()).length;
   var clip = allClips[clipIndex];
   clip.style.display = 'None';
@@ -364,7 +371,7 @@ function uploadNextClip() {
       var ajaxRequest = new XMLHttpRequest();
       var uploadUrl = '/upload?word=' + word + '&_csrf_token=' + csrf_token;
       ajaxRequest.open('POST', uploadUrl, true);
-      ajaxRequest.setRequestHeader('Content-Type', 'application/json');    
+      ajaxRequest.setRequestHeader('Content-Type', 'application/json');
       ajaxRequest.onreadystatechange = function() {
         if (ajaxRequest.readyState == 4) {
 	  if (ajaxRequest.status === 200) {

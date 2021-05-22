@@ -7,7 +7,7 @@ from flask import request
 from flask import session
 from werkzeug.utils import secure_filename
 
-from google.cloud import storage
+# from google.cloud import storage
 
 import os
 import uuid
@@ -15,7 +15,7 @@ import uuid
 app = Flask(__name__)
 
 # Configure this environment variable via app.yaml
-CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+CLOUD_STORAGE_BUCKET = '' #os.environ['CLOUD_STORAGE_BUCKET']
 # [end config]
 
 @app.route("/")
@@ -43,22 +43,22 @@ def start():
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    session_id = request.cookies.get('session_id')
-    if not session_id:
-        make_response('No session', 400)
+    # session_id = request.cookies.get('session_id')
+    # if not session_id:
+    #     make_response('No session', 400)
     word = request.args.get('word')
     audio_data = request.data
-    filename = word + '_' + session_id + '_' + uuid.uuid4().hex + '.ogg'
+    filename = word + '_' + uuid.uuid4().hex + '.ogg'
     secure_name = secure_filename(filename)
     # Left in for debugging purposes. If you comment this back in, the data
     # will be saved to the local file system.
-    #with open(secure_name, 'wb') as f:
-    #    f.write(audio_data)
+    with open(secure_name, 'wb') as f:
+       f.write(audio_data)
     # Create a Cloud Storage client.
-    gcs = storage.Client()
-    bucket = gcs.get_bucket(CLOUD_STORAGE_BUCKET)
-    blob = bucket.blob(secure_name)
-    blob.upload_from_string(audio_data, content_type='audio/ogg')
+    # gcs = storage.Client()
+    # bucket = gcs.get_bucket(CLOUD_STORAGE_BUCKET)
+    # blob = bucket.blob(secure_name)
+    # blob.upload_from_string(audio_data, content_type='audio/ogg')
     return make_response('All good')
 
 # CSRF protection, see http://flask.pocoo.org/snippets/3/.
@@ -76,7 +76,7 @@ def generate_csrf_token():
 
 app.jinja_env.globals['csrf_token'] = generate_csrf_token
 # Change this to your own number before you deploy.
-app.secret_key = os.environ['SESSION_SECRET_KEY']
+app.secret_key = 'a427d62b1f748b7af2a965c88a99005' #os.environ['SESSION_SECRET_KEY']
 
 if __name__ == "__main__":
     app.run(debug=True)

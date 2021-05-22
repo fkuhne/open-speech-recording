@@ -1,3 +1,8 @@
+I've modified this project to save the files locally.
+
+Felipe Kühne - fkuhne@gmail.com - 21/05/2021.
+
+
 **Open Speech Recording** is a small web application to collect short snippets
 of speech, and upload them to cloud storage. It's designed to help gather open
 speech data sets to train machine learning systems.
