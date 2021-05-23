@@ -75,7 +75,7 @@ if (navigator.getUserMedia) {
     }
 
     upload.onclick = function() {
-      saveRecordings();
+      promptToSave();
     }
 
     mediaRecorder.onstop = function(e) {
@@ -179,46 +179,12 @@ function visualize(stream) {
 }
 
 var wantedWords = [
-  // 'Zero',
-  // 'One',
-  // 'Two',
-  // 'Three',
-  // 'Four',
-  // 'Five',
-  // 'Six',
-  // 'Seven',
-  // 'Eight',
-  // 'Nine',
-  // 'On',
-  // 'Off',
-  // 'Stop',
-  // 'Go',
-  // 'Up',
-  // 'Down',
-  // 'Left',
-  // 'Right',
-  // 'Yes',
-  // 'No',
-  'Chimarrao',
-  'Vermelho',
-  'Azul',
-  'Verde',
-  'Amarelo',
-  'Esquerda',
-  'Direita',
+  'chimarrao',
+  'vermelho',
+  'azul',
 ];
 
 var fillerWords = [
-  // 'Dog',
-  // 'Cat',
-  // 'Bird',
-  // 'Tree',
-  // 'Marvin',
-  // 'Sheila',
-  // 'House',
-  // 'Bed',
-  // 'Wow',
-  // 'Happy',
 ];
 
 function getRecordedWords() {
@@ -237,7 +203,7 @@ function getRecordedWords() {
 function getAllWantedWords() {
   var wordCounts = {};
   wantedWords.forEach(function(word) {
-    wordCounts[word] = 5;
+    wordCounts[word] = 1;
   });
   fillerWords.forEach(function(word) {
     wordCounts[word] = 1;
@@ -312,7 +278,9 @@ function startRecording() {
   }
   var word = getNextWord();
   if (word === null) {
-    promptToSave();
+    upload.disabled = false;
+    stop.disabled = true;
+    // promptToSave();
     return;
   }
   updateProgress();
@@ -338,8 +306,8 @@ function endRecording() {
 }
 
 function promptToSave() {
-  if (confirm('Are you ready to upload your words?\nIf not, press cancel now,' +
-	      ' and then press Upload once you are ready.')) {
+  if (confirm('Are you ready to save your words?\nIf not, press cancel now,' +
+	      ' and then press Save once you are ready.')) {
     saveRecordings();
   }
   upload.disabled = false;
@@ -373,26 +341,26 @@ function uploadNextClip() {
       ajaxRequest.open('POST', uploadUrl, true);
       ajaxRequest.setRequestHeader('Content-Type', 'application/json');
       ajaxRequest.onreadystatechange = function() {
-        if (ajaxRequest.readyState == 4) {
-	  if (ajaxRequest.status === 200) {
-            clipIndex += 1;
-            if (clipIndex < allClips.length) {
-	      uploadNextClip();
-	    } else {
-	      allDone();
-	    }
-          } else {
+      if (ajaxRequest.readyState == 4) {
+	      if (ajaxRequest.status === 200) {
+          clipIndex += 1;
+          if (clipIndex < allClips.length) {
+	          uploadNextClip();
+	        } else {
+	          allDone();
+	        }
+        } else {
             alert('Uploading failed with error code ' + ajaxRequest.status);
-          }
-	}
-      };
-      ajaxRequest.send(blob);
+        }
+	    }
+    };
+    ajaxRequest.send(blob);
     }
   };
   xhr.send();
 }
 
 function allDone() {
-  document.cookie = 'all_done=true; path=/';
+  // document.cookie = 'all_done=true; path=/';
   location.reload(true);
 }
